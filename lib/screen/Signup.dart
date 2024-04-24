@@ -73,11 +73,13 @@ class _SignupState extends State<Signup> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
+                      minimumSize: Size(double.infinity, 36),
                     ),
                     child: Text(
                       "Sign up",
                       style: TextStyle(
                         fontSize: 15,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
@@ -131,7 +133,7 @@ class _SignupState extends State<Signup> {
           borderSide: BorderSide(color: Color(0xFF304D30)),
           borderRadius: BorderRadius.circular(4),
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       ),
     );
   }
