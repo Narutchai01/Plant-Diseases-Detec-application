@@ -23,10 +23,7 @@ class Profile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                      height: MediaQuery.of(context)
-                          .padding
-                          .top), // Adjusted padding
+                  SizedBox(height: MediaQuery.of(context).padding.top),
                   SizedBox(height: 8),
                   Text(
                     'Narutchai Mauensean',
@@ -45,11 +42,10 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 24),
-                  // Wrap the buttons column with a Container for the background color
                   Container(
-                    padding: EdgeInsets.zero, // No padding
-                    height: 460 + 48, // Adjusted height with padding
-                    width: 400, // Adjusted width for the background color
+                    padding: EdgeInsets.zero,
+                    height: 460 + 48,
+                    width: 400,
                     decoration: BoxDecoration(
                       color: Color(0xFFF0F0E5),
                       borderRadius: BorderRadius.only(
@@ -61,7 +57,7 @@ class Profile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
-                          height: 48, // Increased to 48
+                          height: 48,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Color(0xFFF0F0E5),
@@ -80,11 +76,10 @@ class Profile extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF304D30),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(4), // Rounded corners
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             padding: EdgeInsets.symmetric(
-                              vertical: 12, // Changed height to 48
+                              vertical: 12,
                               horizontal: 16,
                             ),
                           ),
@@ -112,8 +107,7 @@ class Profile extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF304D30),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(4), // Rounded corners
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             padding: EdgeInsets.symmetric(
                               vertical: 10,
@@ -144,8 +138,7 @@ class Profile extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF304D30),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(4), // Rounded corners
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             padding: EdgeInsets.symmetric(
                               vertical: 10,
