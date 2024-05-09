@@ -8,6 +8,9 @@ class Editscreen extends StatefulWidget {
 }
 
 class _EditscreenState extends State<Editscreen> {
+  String fullName = 'Narutchai Mauensean'; // กำหนดชื่อเริ่มต้น
+  String email = 'fluklnwza007@gmail.com'; // กำหนดอีเมล์เริ่มต้น
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +39,11 @@ class _EditscreenState extends State<Editscreen> {
                 Align(
                   alignment: Alignment.center,
                   child: TextFormField(
+                    initialValue: fullName, // กำหนดค่าเริ่มต้น
+                    onChanged: (value) {
+                      fullName = value; // รับค่าที่แก้ไข
+                    },
                     decoration: InputDecoration(
-                      hintText: 'Full Name',
                       labelText: 'Full Name',
                       border: OutlineInputBorder(),
                     ),
@@ -47,9 +53,11 @@ class _EditscreenState extends State<Editscreen> {
                 Align(
                   alignment: Alignment.center,
                   child: TextFormField(
-                    obscureText: true,
+                    initialValue: email, // กำหนดค่าเริ่มต้น
+                    onChanged: (value) {
+                      email = value; // รับค่าที่แก้ไข
+                    },
                     decoration: InputDecoration(
-                      hintText: 'E-mail',
                       labelText: 'E-mail',
                       border: OutlineInputBorder(),
                     ),
@@ -74,7 +82,13 @@ class _EditscreenState extends State<Editscreen> {
                           color: Color.fromRGBO(255, 255, 255, 1),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          // เมื่อกดปุ่ม SAVE ให้ setState เพื่อให้แสดงชื่อและอีเมล์ด้านบน
+                          fullName = 'Full Name: $fullName';
+                          email = 'E-mail: $email';
+                        });
+                      },
                     ),
                   ),
                 ),
