@@ -1,4 +1,5 @@
 import 'package:capstonec/screen/Profile.dart';
+import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xFFF0F0E5),
         useMaterial3: true,
       ),
-      home: Profile(),
+      home: Signup(),
     );
   }
 }
