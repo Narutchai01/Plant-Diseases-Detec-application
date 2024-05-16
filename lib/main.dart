@@ -1,3 +1,4 @@
+import 'package:capstonec/screen/Profile.dart';
 import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
 
