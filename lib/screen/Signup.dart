@@ -15,6 +15,50 @@ class _SignupState extends State<Signup> {
   FocusNode _passwordFocus = FocusNode();
   FocusNode _confirmpasswordFocus = FocusNode();
 
+  void _handleSignup() {
+    String fullname = _fullnameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmpasswordController.text;
+
+    if (fullname.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      _showErrorDialog('All fields are required.');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showErrorDialog('Passwords do not match.');
+      return;
+    }
+
+    print('Full Name: $fullname');
+    print('Email: $email');
+    print('Password: $password');
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,16 +101,18 @@ class _SignupState extends State<Signup> {
                     controller: _passwordController,
                     focusNode: _passwordFocus,
                     labelText: 'Password',
+                    obscureText: true,
                   ),
                   SizedBox(height: 24),
                   _buildInputBox(
                     controller: _confirmpasswordController,
                     focusNode: _confirmpasswordFocus,
                     labelText: 'Confirm Password',
+                    obscureText: true,
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _handleSignup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF304D30),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -119,10 +165,12 @@ class _SignupState extends State<Signup> {
     required TextEditingController controller,
     required FocusNode focusNode,
     required String labelText,
+    bool obscureText = false,
   }) {
     return TextField(
       controller: controller,
       focusNode: focusNode,
+      obscureText: obscureText,
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(
