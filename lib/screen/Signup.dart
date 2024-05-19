@@ -84,8 +84,8 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
         resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xFFF0F0E5),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             vertical: 100,
