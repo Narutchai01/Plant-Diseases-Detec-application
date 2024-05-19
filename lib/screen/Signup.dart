@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:capstonec/screen/login/login.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -15,12 +18,74 @@ class _SignupState extends State<Signup> {
   FocusNode _passwordFocus = FocusNode();
   FocusNode _confirmpasswordFocus = FocusNode();
 
+  void _handleSignup() {
+    String fullname = _fullnameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmpasswordController.text;
+
+    if (fullname.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      _showErrorDialog('All fields are required.');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showErrorDialog('Passwords do not match.');
+      return;
+    }
+
+    _showSuccessDialog();
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Sign up successful!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
         resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xFFF0F0E5),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             vertical: 100,
@@ -57,16 +122,18 @@ class _SignupState extends State<Signup> {
                     controller: _passwordController,
                     focusNode: _passwordFocus,
                     labelText: 'Password',
+                    obscureText: true,
                   ),
                   SizedBox(height: 24),
                   _buildInputBox(
                     controller: _confirmpasswordController,
                     focusNode: _confirmpasswordFocus,
                     labelText: 'Confirm Password',
+                    obscureText: true,
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _handleSignup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF304D30),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -94,7 +161,13 @@ class _SignupState extends State<Signup> {
                             fontSize: 12, fontWeight: FontWeight.normal),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
                         child: Text(
                           'Login',
                           style: TextStyle(
@@ -119,10 +192,12 @@ class _SignupState extends State<Signup> {
     required TextEditingController controller,
     required FocusNode focusNode,
     required String labelText,
+    bool obscureText = false,
   }) {
     return TextField(
       controller: controller,
       focusNode: focusNode,
+      obscureText: obscureText,
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(
@@ -137,10 +212,4 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: Signup(),
-  ));
 }

@@ -1,3 +1,4 @@
+import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -78,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromRGBO(48, 77, 48, 1),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4), // Corner radius
+                            borderRadius:
+                                BorderRadius.circular(4), // Corner radius
                           ),
                         ),
                         child: Text(
@@ -101,7 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            // Navigate to sign up screen
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Signup()), // Assuming Login is the name of your login page widget
+                            );
                           },
                           child: Text(
                             "Sign Up",
