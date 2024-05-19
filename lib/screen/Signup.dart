@@ -34,9 +34,7 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    print('Full Name: $fullname');
-    print('Email: $email');
-    print('Password: $password');
+    _showSuccessDialog();
   }
 
   void _showErrorDialog(String message) {
@@ -46,6 +44,26 @@ class _SignupState extends State<Signup> {
         return AlertDialog(
           title: Text('Error'),
           content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Sign up successful!'),
           actions: [
             TextButton(
               onPressed: () {
@@ -185,10 +203,4 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: Signup(),
-  ));
 }
