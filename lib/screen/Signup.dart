@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:capstonec/screen/login/login.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -158,7 +161,13 @@ class _SignupState extends State<Signup> {
                             fontSize: 12, fontWeight: FontWeight.normal),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
                         child: Text(
                           'Login',
                           style: TextStyle(
