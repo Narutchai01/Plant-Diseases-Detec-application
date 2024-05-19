@@ -15,7 +15,7 @@ class _ResultState extends State<Result> {
   @override
   void initState() {
     super.initState();
-    _isExpanded = false; // Initialize _isExpanded to false
+    _isExpanded = false;
   }
 
   @override

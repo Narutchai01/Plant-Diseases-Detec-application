@@ -29,41 +29,52 @@ class _ResultnotfoundState extends State<Resultnotfound> {
           ),
         ),
         centerTitle: true,
-        titleSpacing: 0.0, // Remove default title spacing
+        titleSpacing: 0.0,
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 280, // Height of the PageView
-            child: PageView(
-              controller: _pageController,
-              children: [
-                Image.asset(
-                  'assets/images/pic01.jpg',
-                  fit: BoxFit.cover,
+          Stack(
+            children: [
+              SizedBox(
+                height: 280,
+                child: PageView(
+                  controller: _pageController,
+                  children: [
+                    Image.asset(
+                      'assets/images/pic01.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                    Image.asset(
+                      'assets/images/pic02.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                    Image.asset(
+                      'assets/images/pic03.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ],
                 ),
-                Image.asset(
-                  'assets/images/pic02.jpg',
-                  fit: BoxFit.cover,
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 16,
+                child: Center(
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 3,
+                    effect: ScrollingDotsEffect(
+                      dotHeight: 8,
+                      dotWidth: 8,
+                      activeDotColor: const Color(0xFF304D30),
+                      dotColor: Colors.grey,
+                    ),
+                  ),
                 ),
-                Image.asset(
-                  'assets/images/pic03.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(height: 16),
-          SmoothPageIndicator(
-            controller: _pageController, // PageController
-            count: 3,
-            effect: ScrollingDotsEffect(
-              dotHeight: 8,
-              dotWidth: 8,
-              activeDotColor: const Color(0xFF304D30),
-              dotColor: Colors.grey,
-            ),
-          ),
+          SizedBox(height: 24),
           Expanded(
             child: Center(
               child: Column(
@@ -71,8 +82,8 @@ class _ResultnotfoundState extends State<Resultnotfound> {
                 children: [
                   Image.asset(
                     'assets/images/grownplant.png',
-                    width: 100,
-                    height: 100,
+                    width: 200,
+                    height: 200,
                   ),
                   SizedBox(height: 20), //spacing
                   Text(
