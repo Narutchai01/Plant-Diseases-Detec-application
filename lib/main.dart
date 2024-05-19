@@ -1,3 +1,4 @@
+import 'package:capstonec/screen/Result/Result.dart';
 import 'package:capstonec/screen/Result/Resultnotfound.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xFFF0F0E5),
         useMaterial3: true,
       ),
-      home: Resultnotfound(),
+      home: Result(),
     );
   }
 }
