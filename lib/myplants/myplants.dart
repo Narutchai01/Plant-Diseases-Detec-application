@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 final Color backgroundColor = const Color(0xFFF0F0E5);
 
+enum SortOption { byName, byDate }
+
 class MyPlants extends StatefulWidget {
   const MyPlants({Key? key}) : super(key: key);
 
@@ -10,6 +12,8 @@ class MyPlants extends StatefulWidget {
 }
 
 class _MyPlantsState extends State<MyPlants> {
+  SortOption _sortOption = SortOption.byName;
+
   final List<Map<String, String>> plants = [
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
@@ -18,6 +22,20 @@ class _MyPlantsState extends State<MyPlants> {
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
     // Add more plants as needed
   ];
+
+  void _sortPlants(SortOption option) {
+    setState(() {
+      _sortOption = option;
+      switch (_sortOption) {
+        case SortOption.byName:
+          plants.sort((a, b) => a['name']!.compareTo(b['name']!));
+          break;
+        case SortOption.byDate:
+          plants.sort((a, b) => a['date']!.compareTo(b['date']!));
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +49,23 @@ class _MyPlantsState extends State<MyPlants> {
           },
         ),
         title: const Text('My Plants'),
+        actions: [
+          PopupMenuButton<SortOption>(
+            icon: const Icon(Icons.filter_list), // เปลี่ยนไอคอนนี้
+            itemBuilder: (context) => <PopupMenuEntry<SortOption>>[
+              PopupMenuItem<SortOption>(
+                value: SortOption.byName,
+                child: Text('เรียงตามชื่อ'),
+              ),
+              PopupMenuItem<SortOption>(
+                value: SortOption.byDate,
+                child: Text('เรียงตามวันเวลา'),
+              ),
+            ],
+            onSelected: _sortPlants,
+          ),
+        ],
       ),
-      // กำหนดสีพื้นหลังทั้งหน้า
       backgroundColor: backgroundColor,
       body: ListView.builder(
         itemCount: plants.length,
@@ -51,7 +84,6 @@ class _MyPlantsState extends State<MyPlants> {
                 trailing: IconButton(
                   icon: const Icon(Icons.arrow_forward_ios, size: 24.0),
                   onPressed: () {
-                    // Navigate to plant details screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -64,7 +96,6 @@ class _MyPlantsState extends State<MyPlants> {
                   },
                 ),
                 onTap: () {
-                  // Navigate to plant details screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -76,7 +107,7 @@ class _MyPlantsState extends State<MyPlants> {
                   );
                 },
               ),
-              Divider(), // เพิ่ม Divider ระหว่างรายการ
+              Divider(),
             ],
           );
         },
@@ -109,7 +140,6 @@ class _PlantDetailsState extends State<PlantDetails> {
         ),
         title: const Text('Plant Details'),
       ),
-      // กำหนดสีพื้นหลังทั้งหน้า
       backgroundColor: backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
@@ -128,4 +158,10 @@ class _PlantDetailsState extends State<PlantDetails> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: MyPlants(),
+  ));
 }

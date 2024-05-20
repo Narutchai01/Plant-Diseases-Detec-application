@@ -13,6 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Plants App',
       home: const MyPlants(),
-    );
+    );  
   }
 }
