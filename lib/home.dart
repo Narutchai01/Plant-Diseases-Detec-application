@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Text.rich(
                       TextSpan(
-                        text: 'Identification of Your\n', // เอาคำว่า 'Identification of Your' กลับมา
+                        text: 'Identification of Your\n', 
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.normal,
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         children: [
                           TextSpan(
-                            text: '\t\t\t\t\t\t\t\t\t\t\t\tPlant Disease\n\n\n', // คำว่า 'Plant Disease'
+                            text: '\t\t\t\t\t\t\t\t\t\t\t\t\tPlant Disease\n\n', 
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.normal,
@@ -104,9 +104,9 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 20),
                       Center(
                         child: Container(
-                          width: screenWidth * 0.8, // Set the width to 80% of the screen width
+                          width: screenWidth * 0.8, 
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black), // Add black border
+                            border: Border.all(color: Colors.black), 
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               'See more',
                               style: TextStyle(
-                                color: Colors.black, // Text color is black
+                                color: Colors.black, 
                               ),
                             ),
                           ),
@@ -192,8 +192,8 @@ class PlantDiseaseItem extends StatelessWidget {
           ),
         ),
         Divider(
-          color: Colors.black, // Set divider color to black
-        ), // Add a Divider between each item
+          color: Colors.black, 
+        ), 
       ],
     );
   }
