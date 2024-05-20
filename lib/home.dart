@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -29,27 +31,38 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.only(right: 12.0),
-                child: Text(
-                  'My collections',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: Text(
-                  'Identification of Your Plant Disease',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'My collections',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        text: 'Identification of Your\n', // เอาคำว่า 'Identification of Your' กลับมา
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '\t\t\t\t\t\t\t\t\t\t\t\tPlant Disease\n\n\n', // คำว่า 'Plant Disease'
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -89,9 +102,23 @@ class _HomePageState extends State<HomePage> {
                         imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
                       ),
                       const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('See more'),
+                      Center(
+                        child: Container(
+                          width: screenWidth * 0.8, // Set the width to 80% of the screen width
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black), // Add black border
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'See more',
+                              style: TextStyle(
+                                color: Colors.black, // Text color is black
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -119,39 +146,55 @@ class PlantDiseaseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(255, 17, 17, 17)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Image.network(
-            imageUrl,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            // Add your navigation logic here
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Image.network(
+                  imageUrl,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        date,
+                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
                 Text(
-                  date,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  '>', // '>' symbol for navigation
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        Divider(
+          color: Colors.black, // Set divider color to black
+        ), // Add a Divider between each item
+      ],
     );
   }
 }
