@@ -17,7 +17,7 @@ class _MyPlantsState extends State<MyPlants> {
   final List<Map<String, String>> plants = [
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
-    {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
+    {'name': 'Cashew Bacterial Blight', 'date': 'Mar 2 2024'},
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
     {'name': 'Cashew Bacterial Blight', 'date': 'Mar 1 2024'},
     // Add more plants as needed
