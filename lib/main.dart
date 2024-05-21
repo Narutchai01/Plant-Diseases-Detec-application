@@ -1,7 +1,5 @@
-import 'package:capstonec/screen/Profile.dart';
+import 'package:capstonec/Routers/Routes.dart';
 import 'package:capstonec/screen/Signup.dart';
-import 'package:capstonec/screen/login/login.dart';
-import 'package:capstonec/screen/Result/Result.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,6 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Signup(),
+      routes: Routes.routes,
     );
   }
 }
