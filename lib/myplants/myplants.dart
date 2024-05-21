@@ -37,6 +37,15 @@ class _MyPlantsState extends State<MyPlants> {
     });
   }
 
+  String _sortOptionToString(SortOption option) {
+    switch (option) {
+      case SortOption.byName:
+        return 'เรียงตามชื่อ';
+      case SortOption.byDate:
+        return 'เรียงตามวันเวลา';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,70 +58,125 @@ class _MyPlantsState extends State<MyPlants> {
           },
         ),
         title: const Text('My Plants'),
-        actions: [
-          PopupMenuButton<SortOption>(
-            icon: const Icon(Icons.filter_list), // เปลี่ยนไอคอนนี้
-            itemBuilder: (context) => <PopupMenuEntry<SortOption>>[
-              PopupMenuItem<SortOption>(
-                value: SortOption.byName,
-                child: Text('เรียงตามชื่อ'),
-              ),
-              PopupMenuItem<SortOption>(
-                value: SortOption.byDate,
-                child: Text('เรียงตามวันเวลา'),
-              ),
-            ],
-            onSelected: _sortPlants,
+      ),
+      backgroundColor: backgroundColor,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(_sortOptionToString(_sortOption)),
+                PopupMenuButton<SortOption>(
+                  icon: const Icon(Icons.filter_list),
+                  itemBuilder: (context) => <PopupMenuEntry<SortOption>>[
+                    PopupMenuItem<SortOption>(
+                      value: SortOption.byName,
+                      child: Text('เรียงตามชื่อ'),
+                    ),
+                    PopupMenuItem<SortOption>(
+                      value: SortOption.byDate,
+                      child: Text('เรียงตามวันเวลา'),
+                    ),
+                  ],
+                  onSelected: _sortPlants,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: plants.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: Image.network(
+                        'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text(plants[index]['name']!),
+                      subtitle: Text(plants[index]['date']!),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios, size: 24.0),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PlantDetails(
+                                name: plants[index]['name']!,
+                                date: plants[index]['date']!,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PlantDetails(
+                              name: plants[index]['name']!,
+                              date: plants[index]['date']!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Divider(),
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),
-      backgroundColor: backgroundColor,
-      body: ListView.builder(
-        itemCount: plants.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                leading: Image.network(
-                  'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-                title: Text(plants[index]['name']!),
-                subtitle: Text(plants[index]['date']!),
-                trailing: IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, size: 24.0),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlantDetails(
-                          name: plants[index]['name']!,
-                          date: plants[index]['date']!,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PlantDetails(
-                        name: plants[index]['name']!,
-                        date: plants[index]['date']!,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              Divider(),
-            ],
-          );
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: backgroundColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sort),
+            label: 'เรียงลำดับ',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add), // Add an icon for another action
+            label: 'เพิ่ม', // Add a label for another action
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            showSortOptions(context);
+          } else if (index == 1) {
+            // Handle the action for the second item
+          }
         },
       ),
     );
+  }
+
+  void showSortOptions(BuildContext context) {
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
+      items: <PopupMenuEntry<SortOption>>[
+        PopupMenuItem<SortOption>(
+          value: SortOption.byName,
+          child: Text('เรียงตามชื่อ'),
+        ),
+        PopupMenuItem<SortOption>(
+          value: SortOption.byDate,
+          child: Text('เรียงตามวันเวลา'),
+        ),
+      ],
+      elevation: 8.0,
+    ).then((value) {
+      if (value != null) {
+        _sortPlants(value);
+      }
+    });
   }
 }
 
