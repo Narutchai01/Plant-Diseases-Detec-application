@@ -1,9 +1,11 @@
 import 'package:capstonec/Routers/Routes.dart';
 import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async{
   runApp(const MyApp());
+  // await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {

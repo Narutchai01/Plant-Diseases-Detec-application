@@ -1,7 +1,9 @@
+import 'package:capstonec/utils/DioInstance.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -38,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         return;
       }
-      await dio.post("http://10.63.201.157:3000/login", data: {
+      await dio.post("http://localhost:3000/login", data: {
         "email": _emailController.text,
         "password": _passwordController.text,
       }).then((response) async {
@@ -64,6 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
           // await sharedPreferences.setInt("id", response.data["id"]);
           SharePreferrences().saveToken(response.data["token"]);
           SharePreferrences().saveId(response.data["id"]);
+          print(sharedPreferences.getString("token"));
+          print(sharedPreferences.getInt("id"));
           Navigator.pushNamed(context, "/profile");
 
         } else {

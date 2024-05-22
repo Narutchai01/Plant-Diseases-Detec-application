@@ -1,65 +1,60 @@
 import 'package:capstonec/Models/Account.dart';
-import 'package:capstonec/Models/Model.dart';
+import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-Account accountuser = Account(
-  id: 0,
-  name: '',
-  email: '',
-  createdAt: DateTime.now(),
-);
+import '../Model/Model.dart';
 
 class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
+
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  final dio = Dio();
+  final _dio = Dio();
+  Account? _accountUser;
+
   @override
   void initState() {
     super.initState();
-    getAccount();
+    _getAccount();
   }
 
-  Future<GetToken> getPrefereces() async {
-    String Token = (await SharePreferrences().getToken()) ?? '';
-    int Id = (await SharePreferrences().getId()) ?? 0;
-    GetToken gettoken = GetToken(token: Token, id: Id);
-    return gettoken;
+  Future<GetToken> _getPreferences() async {
+    final token = await SharePreferrences().getToken() ?? '';
+    final id = await SharePreferrences().getId() ?? 0;
+    return GetToken(token: token, id: id);
   }
 
-  Future<void> getAccount() async {
-    GetToken gettoken = await getPrefereces();
-    await dio
-        .get('http://10.63.201.157:3000/account/${gettoken.id}',
-            options: Options(headers: {
-              'x-jwt-token': gettoken.token,
-            }))
-        .then((res) {
-      Account account = Account.fromJson(res.data);
-      accountToJson(account);
-      accountuser = account;
-      return accountuser;
-    }).catchError((err) {
+  Future<void> _getAccount() async {
+    final getToken = await _getPreferences();
+    try {
+      final response = await _dio.get(
+        'http://localhost:3000/account/${getToken.id}',
+        options: Options(headers: {'x-jwt-token': getToken.token}),
+      );
+      final account = Account.fromJson(response.data);
+      setState(() {
+        _accountUser = account;
+      });
+    } catch (err) {
       print(err);
-    });
+    }
   }
 
-
-  void handleLogout()  {
-     SharePreferrences().removeToken();
-     SharePreferrences().removeId();
+  void _handleLogout() {
+    SharePreferrences().removeToken();
+    SharePreferrences().removeId();
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    // print(accountuser.email);
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: Navbar(), // Added Navbar()
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -78,14 +73,11 @@ class _ProfileState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: MediaQuery.of(context).padding.top),
                       const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0),
                         child: Text(
-                          accountuser != null && accountuser.name != null
-                              ? '${accountuser.name}'
-                              : 'No name available',
+                          _accountUser?.name ?? 'No name available',
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -96,9 +88,7 @@ class _ProfileState extends State<Profile> {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0),
                         child: Text(
-                          accountuser != null && accountuser.email != null
-                              ? '${accountuser.email}'
-                              : 'No email available',
+                          _accountUser?.email ?? 'No email available',
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.normal,
@@ -139,115 +129,21 @@ class _ProfileState extends State<Profile> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   const SizedBox(height: 16),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xFF304D30),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16,
-                                        ),
-                                        minimumSize:
-                                            const Size(double.infinity, 42),
-                                      ),
-                                      child: const Row(
-                                        children: [
-                                          SizedBox(width: 12),
-                                          Icon(Icons.edit, color: Colors.white),
-                                          SizedBox(width: 16),
-                                          Text(
-                                            'Edit Profile',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  _buildButton(
+                                    onPressed: () {}, // Add onPressed callback
+                                    icon: Icons.edit,
+                                    label: 'Edit Profile',
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xFF304D30),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16,
-                                        ),
-                                        minimumSize:
-                                            const Size(double.infinity, 42),
-                                      ),
-                                      child: const Row(
-                                        children: [
-                                          SizedBox(width: 12),
-                                          Icon(Icons.change_circle,
-                                              color: Colors.white),
-                                          SizedBox(width: 16),
-                                          Text(
-                                            'Change Password',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  _buildButton(
+                                    onPressed: () {}, // Add onPressed callback
+                                    icon: Icons.change_circle,
+                                    label: 'Change Password',
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        handleLogout();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xFF304D30),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16,
-                                        ),
-                                        minimumSize:
-                                            const Size(double.infinity, 42),
-                                      ),
-                                      child: const Row(
-                                        children: [
-                                          SizedBox(width: 12),
-                                          Icon(Icons.exit_to_app,
-                                              color: Colors.white),
-                                          SizedBox(width: 16),
-                                          Text(
-                                            'Logout',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                  _buildButton(
+                                    onPressed: _handleLogout,
+                                    icon: Icons.exit_to_app,
+                                    label: 'Logout',
+                                  ),
                                 ],
                               ),
                             ),
@@ -260,6 +156,45 @@ class _ProfileState extends State<Profile> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String label,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF304D30),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 16,
+          ),
+          minimumSize: const Size(double.infinity, 42),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 12),
+            Icon(icon, color: Colors.white),
+            const SizedBox(width: 16),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -39,7 +39,7 @@ class _SignupState extends State<Signup> {
     _showErrorDialog('Passwords do not match.');
     return;
   }
-  await dio.post("http://10.63.201.157:3000/register", data: {
+  await dio.post("http://localhost:3000/register", data: {
     "name": fullname,
     "email": email,
     "password": password,
