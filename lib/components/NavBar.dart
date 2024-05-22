@@ -12,7 +12,16 @@ class _NavbarState extends State<Navbar> {
     setState(() {
       _selectedIndex = index;
     });
-    // Handle navigation logic based on the selected index
+    switch (index) {
+      case 1:
+        Navigator.pushNamed(context, '/camera');
+        break;
+case 2:
+        Navigator.pushNamed(context, '/profile');
+        break;
+      default:
+        Navigator.pushNamed(context, '/');
+    }
   }
 
   @override
