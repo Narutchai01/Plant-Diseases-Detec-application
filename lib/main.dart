@@ -1,17 +1,15 @@
 import 'package:capstonec/Routers/Routes.dart';
 import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async{
+void main() async {
   runApp(const MyApp());
   // await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
