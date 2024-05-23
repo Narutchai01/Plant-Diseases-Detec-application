@@ -1,3 +1,4 @@
+import 'package:capstonec/components/NavBar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -110,7 +111,9 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/myplants');
+                            },
                             child: Text(
                               'See more',
                               style: TextStyle(
@@ -128,6 +131,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: Navbar(),
     );
   }
 }

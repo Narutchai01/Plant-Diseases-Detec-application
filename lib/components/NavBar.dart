@@ -13,6 +13,9 @@ class _NavbarState extends State<Navbar> {
       _selectedIndex = index;
     });
     switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
       case 1:
         Navigator.pushNamed(context, '/camera');
         break;

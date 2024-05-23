@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:capstonec/screen/login/login.dart';
 import 'package:capstonec/screen/HomePage.dart';
+import "package:capstonec/screen/myplants/myplants.dart";
 
 class Routes {
   static const String profile = '/profile';
@@ -12,12 +13,14 @@ class Routes {
   static const String Login = '/login';
   static const String camera = '/camera';
   static const String home = '/home';
+  static const String myplants = '/myplants';
   static Map<String, WidgetBuilder> routes = {
     Login: (context) => LoginScreen(),
     signup: (context) => Signup(),
     profile: (context) => Profile(),
     camera: (context) => CameraScreen(),
     home : (context) => HomePage(),
+    myplants : (context) => MyPlants()
   };
 
 }
