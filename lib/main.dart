@@ -1,7 +1,6 @@
 import 'package:capstonec/Routers/Routes.dart';
 import 'package:capstonec/screen/Signup/Signup.dart';
 import 'package:flutter/material.dart';
-import 'package:capstonec/screen/editpassword.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xFFF0F0E5),
         useMaterial3: true,
       ),
-      home: Editpassword(),
+      home: Signup(),
       routes: Routes.routes,
     );
   }

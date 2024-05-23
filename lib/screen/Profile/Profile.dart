@@ -137,7 +137,9 @@ class _ProfileState extends State<Profile> {
                                     label: 'Edit Profile',
                                   ),
                                   _buildButton(
-                                    onPressed: () {}, // Add onPressed callback
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/editpassword');
+                                    }, // Add onPressed callback
                                     icon: Icons.change_circle,
                                     label: 'Change Password',
                                   ),
