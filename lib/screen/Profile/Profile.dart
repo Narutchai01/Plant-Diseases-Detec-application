@@ -130,7 +130,9 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   const SizedBox(height: 16),
                                   _buildButton(
-                                    onPressed: () {}, // Add onPressed callback
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/editpage');
+                                    }, // Add onPressed callback
                                     icon: Icons.edit,
                                     label: 'Edit Profile',
                                   ),
