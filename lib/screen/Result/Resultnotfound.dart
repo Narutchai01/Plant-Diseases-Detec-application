@@ -85,7 +85,7 @@ class _ResultnotfoundState extends State<Resultnotfound> {
                     width: 200,
                     height: 200,
                   ),
-                  SizedBox(height: 20), //spacing
+                  SizedBox(height: 20),
                   Text(
                     'Do not found any disease',
                     style: TextStyle(
