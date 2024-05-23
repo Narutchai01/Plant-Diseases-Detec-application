@@ -3,7 +3,7 @@ import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../Model/Model.dart';
+import '../../Model/Model.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);

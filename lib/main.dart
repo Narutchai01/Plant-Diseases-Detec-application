@@ -1,5 +1,5 @@
 import 'package:capstonec/Routers/Routes.dart';
-import 'package:capstonec/screen/Signup.dart';
+import 'package:capstonec/screen/Signup/Signup.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

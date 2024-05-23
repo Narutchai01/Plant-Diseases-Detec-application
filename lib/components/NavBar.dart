@@ -24,9 +24,11 @@ case 2:
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Color.fromRGBO(182, 196, 182, 1),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

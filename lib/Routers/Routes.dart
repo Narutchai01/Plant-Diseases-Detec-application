@@ -1,6 +1,6 @@
 import 'package:capstonec/screen/Camera/CameraScreen.dart';
-import 'package:capstonec/screen/Profile.dart';
-import 'package:capstonec/screen/Signup.dart';
+import 'package:capstonec/screen/Profile/Profile.dart';
+import 'package:capstonec/screen/Signup/Signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:capstonec/screen/login/login.dart';
