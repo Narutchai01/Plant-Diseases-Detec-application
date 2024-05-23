@@ -1,16 +1,26 @@
+import 'package:capstonec/Routers/Routes.dart';
+import 'package:capstonec/screen/Signup/Signup.dart';
 import 'package:flutter/material.dart';
-import 'home.dart'; // เพิ่มการ import ไฟล์ home.dart
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  runApp(const MyApp());
+  // await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
-      home: HomePage(), // เปลี่ยนจาก Scaffold เป็น HomePage()
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF304D30)),
+        backgroundColor: Color(0xFFF0F0E5),
+        useMaterial3: true,
+      ),
+      home: Signup(),
+      routes: Routes.routes,
     );
   }
 }

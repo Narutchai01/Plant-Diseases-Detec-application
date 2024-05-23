@@ -1,4 +1,8 @@
+import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:capstonec/utils/SharePreferrences.dart';
+
 
 class Signup extends StatefulWidget {
   @override
@@ -6,6 +10,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final dio = Dio();
   TextEditingController _fullnameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -15,14 +20,91 @@ class _SignupState extends State<Signup> {
   FocusNode _passwordFocus = FocusNode();
   FocusNode _confirmpasswordFocus = FocusNode();
 
+ void _handleSignup() async  {
+
+  String fullname = _fullnameController.text;
+  String email = _emailController.text;
+  String password = _passwordController.text;
+  String confirmPassword = _confirmpasswordController.text;
+
+  if (fullname.isEmpty ||
+      email.isEmpty ||
+      password.isEmpty ||
+      confirmPassword.isEmpty) {
+    _showErrorDialog('All fields are required.');
+    return;
+  }
+
+  if (password != confirmPassword) {
+    _showErrorDialog('Passwords do not match.');
+    return;
+  }
+  await dio.post("http://localhost:3000/register", data: {
+    "name": fullname,
+    "email": email,
+    "password": password,
+  }).then((response) async {
+    if (response.statusCode == 200) {
+      SharePreferrences().saveToken(response.data["token"]);
+      SharePreferrences().saveId(response.data["id"]);
+      _showSuccessDialog();
+      Navigator.pushNamed(context, "/profile");
+    } else {
+      _showErrorDialog('An error occurred. Please try again.');
+    }
+  }).catchError((error) {
+    _showErrorDialog('An error occurred. Please try again.');
+  });
+}
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Sign up successful!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
         resizeToAvoidBottomInset: false,
+        backgroundColor: const Color(0xFFF0F0E5),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: 100,
           ),
           child: Center(
@@ -31,7 +113,7 @@ class _SignupState extends State<Signup> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
+                  const Text(
                     'Sign up',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -40,42 +122,44 @@ class _SignupState extends State<Signup> {
                       color: Color(0xFF304D30),
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   _buildInputBox(
                     controller: _fullnameController,
                     focusNode: _fullnameFocus,
                     labelText: 'Full name',
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   _buildInputBox(
                     controller: _emailController,
                     focusNode: _emailFocus,
                     labelText: 'Email',
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   _buildInputBox(
                     controller: _passwordController,
                     focusNode: _passwordFocus,
                     labelText: 'Password',
+                    obscureText: true,
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   _buildInputBox(
                     controller: _confirmpasswordController,
                     focusNode: _confirmpasswordFocus,
                     labelText: 'Confirm Password',
+                    obscureText: true,
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _handleSignup,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF304D30),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: const Color(0xFF304D30),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      minimumSize: Size(double.infinity, 36),
+                      minimumSize: const Size(double.infinity, 36),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Sign up",
                       style: TextStyle(
                         fontSize: 15,
@@ -84,18 +168,20 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Already have an account ?',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.normal),
                       ),
                       TextButton(
-                        onPressed: () {},
-                        child: Text(
+                        onPressed: () {
+                         Navigator.pushNamed(context, "/login");
+                        },
+                        child: const Text(
                           'Login',
                           style: TextStyle(
                             fontSize: 14,
@@ -119,28 +205,24 @@ class _SignupState extends State<Signup> {
     required TextEditingController controller,
     required FocusNode focusNode,
     required String labelText,
+    bool obscureText = false,
   }) {
     return TextField(
       controller: controller,
       focusNode: focusNode,
+      obscureText: obscureText,
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF304D30)),
+          borderSide: const BorderSide(color: Color(0xFF304D30)),
           borderRadius: BorderRadius.circular(4),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF304D30)),
+          borderSide: const BorderSide(color: Color(0xFF304D30)),
           borderRadius: BorderRadius.circular(4),
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: Signup(),
-  ));
 }
