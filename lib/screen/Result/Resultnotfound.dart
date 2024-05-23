@@ -93,7 +93,7 @@ class _ResultnotfoundState extends State<Resultnotfound> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12), // Add some spacing between the texts
+                  SizedBox(height: 12),
                   Text(
                     'Look like your plant is healthy.\nYou can try again by taking another photo.',
                     textAlign: TextAlign.center,
