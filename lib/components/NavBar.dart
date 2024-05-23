@@ -20,7 +20,7 @@ case 2:
         Navigator.pushNamed(context, '/profile');
         break;
       default:
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamed(context, '/home');
     }
   }
 

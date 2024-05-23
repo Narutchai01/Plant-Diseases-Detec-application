@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SharePreferrences().saveId(response.data["id"]);
           print(sharedPreferences.getString("token"));
           print(sharedPreferences.getInt("id"));
-          Navigator.pushNamed(context, "/profile");
+          Navigator.pushNamed(context, "/home");
 
         } else {
           showDialog(
