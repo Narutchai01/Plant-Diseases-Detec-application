@@ -1,23 +1,26 @@
-import 'package:capstonec/screen/Edit.dart';
+import 'package:capstonec/Routers/Routes.dart';
+import 'package:capstonec/screen/Signup/Signup.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  // await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF304D30)),
+        backgroundColor: Color(0xFFF0F0E5),
         useMaterial3: true,
       ),
-      home: Editscreen(),
+      home: Signup(),
+      routes: Routes.routes,
     );
   }
 }
