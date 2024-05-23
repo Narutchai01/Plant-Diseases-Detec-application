@@ -1,19 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 class DioInstance {
  static final DioInstance _singleton = DioInstance._internal();
 
- factory DioInstance() {
-   return _singleton;
+ factory DioInstance(String token) {
+  final headers = {
+   'Content-Type': 'application/json',
+   if (token.isNotEmpty) 'x-jwt-token': token,
+  };
+  return _singleton..dio = Dio(BaseOptions(
+   baseUrl: "http://localhost:3000",
+   headers: headers,
+  ));
  }
 
-  DioInstance._internal();
+ DioInstance._internal();
 
- static final Dio dio = Dio(BaseOptions(
-   baseUrl: 'https://${dotenv.env['IPLOCAL']}:3000'
- ));
+ late Dio dio;
 }
-
-

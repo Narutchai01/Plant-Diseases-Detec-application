@@ -17,101 +17,26 @@ class _LoginScreenState extends State<LoginScreen> {
   final dio = Dio();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  void handleSubmit() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    try {
-      if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('All fields are required.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
-      await dio.post("http://localhost:3000/login", data: {
-        "email": _emailController.text,
-        "password": _passwordController.text,
-      }).then((response) async {
-        if (response.statusCode == 200) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Success'),
-                content: const Text('Login successful.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-          // await sharedPreferences.setString("token", response.data["token"]);
-          // await sharedPreferences.setInt("id", response.data["id"]);
-          SharePreferrences().saveToken(response.data["token"]);
-          SharePreferrences().saveId(response.data["id"]);
-          print(sharedPreferences.getString("token"));
-          print(sharedPreferences.getInt("id"));
-          Navigator.pushNamed(context, "/home");
 
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Error'),
-                content: const Text('An error occurred. Please try again.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      }).catchError((error) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('An error occurred. Please try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      });
-    } catch (e) {
-      print(e);
-    }
+
+  void handleSubmit() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final dioinstance = DioInstance('');
+    await dioinstance.dio.post('/login', data: {
+      'email': email,
+      'password': password,
+    }).then((res) {
+      final token = res.data['token'];
+      final id = res.data['id'];
+      SharePreferrences().saveToken(token);
+      SharePreferrences().saveId(id);
+      Navigator.pushNamed(context, '/home');
+    }).catchError((error) {
+      print(error);
+    });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(decoration: const BoxDecoration(

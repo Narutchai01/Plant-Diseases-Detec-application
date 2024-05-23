@@ -1,3 +1,6 @@
+import 'package:capstonec/Model/Model.dart';
+import 'package:capstonec/utils/DioInstance.dart';
+import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
 
 class Editscreen extends StatefulWidget {
@@ -8,8 +11,56 @@ class Editscreen extends StatefulWidget {
 }
 
 class _EditscreenState extends State<Editscreen> {
-  String fullName = 'Narutchai Mauensean'; // กำหนดชื่อเริ่มต้น
-  String email = 'fluklnwza007@gmail.com'; // กำหนดอีเมล์เริ่มต้น
+  late String fullName ;
+  late String email ;
+
+  @override
+  void initState() {
+    super.initState();
+    getAccount();
+  }
+  Future<GetToken> _getPreferences() async {
+    final token = await SharePreferrences().getToken() ?? '';
+    final id = await SharePreferrences().getId() ?? 0;
+    return GetToken(token: token, id: id);
+  }
+
+  Future<void> getAccount() async {
+    final token = await _getPreferences();
+    final dioinstance = DioInstance(token.token);
+    await dioinstance.dio.get('/account/${token.id}').then((res) {
+      final data = res.data;
+      setState(() {
+        fullName = data['name'];
+        email = data['email'];
+      });
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+
+  void handleSubmit() async {
+    final token = await _getPreferences();
+    final dioinstance = DioInstance(token.token);
+    await dioinstance.dio.patch('/account/${token.id}', data: {
+      'name': fullName,
+      'email': email,
+    }).then((res) {
+      Navigator.pushNamed(context, '/profile');
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +92,7 @@ class _EditscreenState extends State<Editscreen> {
                   child: TextFormField(
                     initialValue: fullName, // กำหนดค่าเริ่มต้น
                     onChanged: (value) {
-                      fullName = value; // รับค่าที่แก้ไข
+                      fullName = value;
                     },
                     decoration: InputDecoration(
                       labelText: 'Full Name',
@@ -55,7 +106,7 @@ class _EditscreenState extends State<Editscreen> {
                   child: TextFormField(
                     initialValue: email, // กำหนดค่าเริ่มต้น
                     onChanged: (value) {
-                      email = value; // รับค่าที่แก้ไข
+                      email = value;
                     },
                     decoration: InputDecoration(
                       labelText: 'E-mail',
@@ -83,11 +134,7 @@ class _EditscreenState extends State<Editscreen> {
                         ),
                       ),
                       onPressed: () {
-                        setState(() {
-                          // เมื่อกดปุ่ม SAVE ให้ setState เพื่อให้แสดงชื่อและอีเมล์ด้านบน
-                          fullName = 'Full Name: $fullName';
-                          email = 'E-mail: $email';
-                        });
+                          handleSubmit();
                       },
                     ),
                   ),
