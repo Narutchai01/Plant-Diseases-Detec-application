@@ -1,24 +1,16 @@
-import 'package:capstonec/screen/Signup.dart';
 import 'package:flutter/material.dart';
+import 'home.dart'; // เพิ่มการ import ไฟล์ home.dart
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF304D30)),
-        backgroundColor: Color(0xFFF0F0E5),
-        useMaterial3: true,
-      ),
-      home: Signup(),
+      title: 'My App',
+      home: HomePage(), // เปลี่ยนจาก Scaffold เป็น HomePage()
     );
   }
 }
