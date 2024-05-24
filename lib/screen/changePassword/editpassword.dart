@@ -1,3 +1,7 @@
+import 'package:capstonec/Model/Model.dart';
+import 'package:capstonec/components/NavBar.dart';
+import 'package:capstonec/utils/DioInstance.dart';
+import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
 
 class Editpassword extends StatefulWidget {
@@ -17,6 +21,30 @@ class _EditpasswordState extends State<Editpassword> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+
+  Future<GetToken> _getPreferences() async {
+    final token = await SharePreferrences().getToken() ?? '';
+    final id = await SharePreferrences().getId() ?? 0;
+    return GetToken(token: token, id: id);
+  }
+
+
+  void handleSubmit() async {
+    final getToken = await _getPreferences();
+    final dioInstance = DioInstance(getToken.token);
+    
+    try {
+  await dioInstance.dio.patch('/account/${getToken.id}', data: {
+      'password': _passwordController.text,
+    }).then((res) => {
+      Navigator.pop(context),
+  }).catchError((error) {
+      print(error);});
+    } catch (err) {
+      print(err);
+    }
   }
 
   @override
@@ -109,9 +137,7 @@ class _EditpasswordState extends State<Editpassword> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Save the new password
-                      }
+                     handleSubmit();
                     },
                   ),
                 ),
@@ -120,6 +146,7 @@ class _EditpasswordState extends State<Editpassword> {
           ),
         ),
       ),
+      bottomNavigationBar: Navbar(),
     );
   }
 }

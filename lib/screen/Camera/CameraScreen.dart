@@ -1,6 +1,13 @@
+import 'package:capstonec/screen/Camera/PreviewImage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:capstonec/screen/Camera/ImageConfirm.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -10,22 +17,33 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   late List<CameraDescription> cameras;
   late CameraController controller;
+  bool isCameraInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    startCamera();
+    initializeCamera();
   }
 
-  void startCamera() async {
+  Future<void> initializeCamera() async {
+    // Request permissions for camera and storage
+    await [Permission.camera, Permission.storage].request();
+
     cameras = await availableCameras();
-    controller = CameraController(cameras[1], ResolutionPreset.high);
-    await controller.initialize().then((value) {
-      if (!mounted) {
-        return;
+    if (cameras.isNotEmpty) {
+      controller = CameraController(cameras[1], ResolutionPreset.high);
+      try {
+        await controller.initialize();
+        if (!mounted) return;
+        setState(() {
+          isCameraInitialized = true;
+        });
+      } catch (e) {
+        print('Error initializing camera: $e');
       }
-      setState(() {});
-    }).catchError((e) => print(e));
+    } else {
+      print('No cameras available');
+    }
   }
 
   @override
@@ -34,53 +52,99 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (controller.value.isInitialized) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Camera'),
-        ),
-        body: Stack(
-          children: [
-            Expanded(
-              child: CameraPreview(controller),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: IconButton(
-                icon: const Icon(Icons.image_outlined, size: 50),
-                onPressed: () async {
-                  final image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    print(image.path);
-                  }
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: IconButton(
-                icon: const Icon(Icons.circle, size: 50, color: Colors.white),
-                onPressed: () async {
-                  try {
-                    final image = await controller.takePicture();
-                    print(image.path);
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
+  Future<void> savePicture(XFile file) async {
+    try {
+      final directory = await getExternalStorageDirectory();
+      final String dirPath = '${directory!.path}/Pictures';
+      await Directory(dirPath).create(recursive: true);
+      final String filePath = '$dirPath/${path.basename(file.path)}';
+      await file.saveTo(filePath);
+
+      // Save to gallery
+      final result = await ImageGallerySaver.saveFile(filePath);
+      print('Saved to gallery: $result');
+    } catch (e) {
+      print('Error saving picture: $e');
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(48, 77, 48, 1),
+        title: const Text('Camera'),
+      ),
+      body: isCameraInitialized
+          ? Stack(
+        children: [
+
+          Container(
+            height: double.infinity,
+            child: CameraPreview(controller),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: IconButton(
+              icon: const Icon(Icons.image, size: 50 , color: Colors.white),
+              onPressed: () async {
+                try {
+                  final imagePicker = ImagePicker();
+                  final List<XFile>? imageFiles = await imagePicker.pickMultiImage();
+                  if (imageFiles != null && imageFiles.isNotEmpty) {
+                    // Navigate to ImagePickerConfirm and clear the navigation stack
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => (ImagePickerConfirm(
+                          imageFiles
+                        )
+
+                        ),
+                      ),
+                          (route) => true,
+                    );
+                  }
+                } catch (e) {
+                  print('Error picking images: $e');
+                }
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: IconButton(
+              icon: const Icon(Icons.circle, size: 50, color: Colors.white),
+              onPressed: () async {
+                try {
+                  await controller.setFlashMode(FlashMode.auto);
+                  XFile file = await controller.takePicture();
+                  print('Picture taken: ${file.path}');
+                  await savePicture(file);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PreviewImage(imagePath: file.path, onImageSelected: (imagePath) {
+                  })));
+                } catch (e) {
+                  print('Error taking picture: $e');
+                }
+              },
+            ),
+          ),
+        ],
+      )
+          : Center(child: CircularProgressIndicator()),
+    );
+  }
 }
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MaterialApp(
+    home: CameraScreen(),
+  ));
+}
+
+
+
 
 // Future _pickerImage() async {
 //   final image = await ImagePicker().pickImage(source: ImageSource.gallery);

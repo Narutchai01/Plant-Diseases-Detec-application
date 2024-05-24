@@ -1,4 +1,5 @@
 import 'package:capstonec/Model/Model.dart';
+import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
@@ -144,6 +145,7 @@ class _EditscreenState extends State<Editscreen> {
           ),
         ),
       ),
+      bottomNavigationBar: Navbar(),
     );
   }
 }
