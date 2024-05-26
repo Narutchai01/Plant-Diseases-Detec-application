@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:capstonec/screen/Camera/CameraScreen.dart';
 import 'dart:io';
 import 'package:capstonec/screen/Camera/ImageConfirm.dart';
 class PreviewImage extends StatefulWidget {

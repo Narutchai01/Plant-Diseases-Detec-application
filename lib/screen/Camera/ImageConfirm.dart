@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:dio/dio.dart';
 
 class ImagePickerConfirm extends StatefulWidget {
   const ImagePickerConfirm(this.selectedImages, {Key? key}) : super(key: key);
@@ -24,12 +23,12 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-            title: Text('Confirm Images'),
-        backgroundColor: Colors.blue,),
+            title: const Text('Confirm Images'),
+        backgroundColor: const Color.fromRGBO(48, 72, 48, 1),),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
               'Selected',
@@ -42,7 +41,7 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
           ),
           Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
@@ -53,44 +52,14 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
               },
             ),
           ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Description',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                TextField(
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your description...',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                ),
-              ],
-            ),
-          ),
           Center(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () async {
-
-
                   print('Confirmation Button Pressed!');
                 },
-                child: Text(
+                child: const Text(
                   'Confirm',
                   style: TextStyle(
                     color: Colors.white,
@@ -102,7 +71,7 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0),
                   ),
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: 60.0, vertical: 30.0), // Adjust size here
                 ),
               ),

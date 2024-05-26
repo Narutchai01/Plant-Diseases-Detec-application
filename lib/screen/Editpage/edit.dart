@@ -1,4 +1,5 @@
 import 'package:capstonec/Model/Model.dart';
+import 'package:capstonec/Models/Account.dart';
 import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
@@ -12,8 +13,7 @@ class Editscreen extends StatefulWidget {
 }
 
 class _EditscreenState extends State<Editscreen> {
-  late String fullName ;
-  late String email ;
+  Account? _account;
 
   @override
   void initState() {
@@ -30,10 +30,9 @@ class _EditscreenState extends State<Editscreen> {
     final token = await _getPreferences();
     final dioinstance = DioInstance(token.token);
     await dioinstance.dio.get('/account/${token.id}').then((res) {
-      final data = res.data;
+      final account = Account.fromJson(res.data);
       setState(() {
-        fullName = data['name'];
-        email = data['email'];
+        _account = account;
       });
     }).catchError((error) {
       print(error);
@@ -44,18 +43,18 @@ class _EditscreenState extends State<Editscreen> {
   final TextEditingController emailController = TextEditingController();
 
 
-  void handleSubmit() async {
-    final token = await _getPreferences();
-    final dioinstance = DioInstance(token.token);
-    await dioinstance.dio.patch('/account/${token.id}', data: {
-      'name': fullName,
-      'email': email,
-    }).then((res) {
-      Navigator.pushNamed(context, '/profile');
-    }).catchError((error) {
-      print(error);
-    });
-  }
+  // void handleSubmit() async {
+  //   final token = await _getPreferences();
+  //   final dioinstance = DioInstance(token.token);
+  //   await dioinstance.dio.patch('/account/${token.id}', data: {
+  //     'name': fullName,
+  //     'email': email,
+  //   }).then((res) {
+  //     Navigator.pushNamed(context, '/profile');
+  //   }).catchError((error) {
+  //     print(error);
+  //   });
+  // }
 
 
 
@@ -91,10 +90,7 @@ class _EditscreenState extends State<Editscreen> {
                 Align(
                   alignment: Alignment.center,
                   child: TextFormField(
-                    initialValue: fullName, // กำหนดค่าเริ่มต้น
-                    onChanged: (value) {
-                      fullName = value;
-                    },
+                    initialValue: _account?.name ?? "" ,
                     decoration: const InputDecoration(
                       labelText: 'Full Name',
                       border: OutlineInputBorder(),
@@ -105,10 +101,7 @@ class _EditscreenState extends State<Editscreen> {
                 Align(
                   alignment: Alignment.center,
                   child: TextFormField(
-                    initialValue: email, // กำหนดค่าเริ่มต้น
-                    onChanged: (value) {
-                      email = value;
-                    },
+                    initialValue: _account?.email ?? "",
                     decoration: const InputDecoration(
                       labelText: 'E-mail',
                       border: OutlineInputBorder(),
@@ -135,7 +128,6 @@ class _EditscreenState extends State<Editscreen> {
                         ),
                       ),
                       onPressed: () {
-                          handleSubmit();
                       },
                     ),
                   ),
