@@ -43,18 +43,16 @@ class _EditscreenState extends State<Editscreen> {
   final TextEditingController emailController = TextEditingController();
 
 
-  // void handleSubmit() async {
-  //   final token = await _getPreferences();
-  //   final dioinstance = DioInstance(token.token);
-  //   await dioinstance.dio.patch('/account/${token.id}', data: {
-  //     'name': fullName,
-  //     'email': email,
-  //   }).then((res) {
-  //     Navigator.pushNamed(context, '/profile');
-  //   }).catchError((error) {
-  //     print(error);
-  //   });
-  // }
+  void handleSubmit() async {
+    final token = await _getPreferences();
+    final dioinstance = DioInstance(token.token);
+    await dioinstance.dio.patch('/account/${token.id}', data: {
+    }).then((res) {
+      Navigator.pushNamed(context, '/profile');
+    }).catchError((error) {
+      print(error);
+    });
+  }
 
 
 
