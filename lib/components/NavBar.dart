@@ -12,26 +12,26 @@ class _NavbarState extends State<Navbar> {
     setState(() {
       _selectedIndex = index;
     });
+
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home');
         break;
       case 1:
-        Navigator.pushNamed(context, '/camera');
+        Navigator.pushReplacementNamed(context, '/camera');
         break;
-case 2:
-        Navigator.pushNamed(context, '/profile');
+      case 2:
+        Navigator.pushReplacementNamed(context, '/profile');
         break;
       default:
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Color.fromRGBO(182, 196, 182, 1),
+      backgroundColor: const Color.fromRGBO(182, 196, 182, 1),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -47,8 +47,6 @@ case 2:
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.green,
-      unselectedItemColor: Colors.grey,
       onTap: _onItemTapped,
     );
   }
