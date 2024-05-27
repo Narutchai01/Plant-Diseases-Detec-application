@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:capstonec/Models/DataResults.dart';
-import 'package:capstonec/components/PlantDeseaseItem.dart';
-import 'package:capstonec/Model/Model.dart';
 import 'package:capstonec/components/NavBar.dart';
+import 'package:capstonec/components/PlantDeseaseItem.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,33 +15,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
- final List<DataResults> dataResults = [] ;
-
+  List<DataResults> _dataResults = [];
 
   @override
-  void intiState(){
+  void initState() {
     super.initState();
-   _getResult();
+    _getResults();
   }
 
-  Future<GetToken> _getPreferences() async {
-    final token = await SharePreferrences().getToken() ?? '';
-    final id = await SharePreferrences().getId() ?? 0;
-    return GetToken(token: token, id: id);
-  }
-
-
-  Future<void> _getResult() async {
-    final getToken = await _getPreferences();
-    final dioInstance = DioInstance(getToken.token);
+  Future<void> _getResults() async {
     try {
-      final response = await dioInstance.dio.get('/result/${getToken.id}');
-
+      final token = await SharePreferrences().getToken() ?? '';
+      final id = await SharePreferrences().getId() ?? 0;
+      final dioInstance = DioInstance(token);
+      final response = await dioInstance.dio.get('/result/$id');
       if (response.statusCode == 200) {
         final results = dataResultsFromJson(jsonEncode(response.data));
         setState(() {
-          dataResults.addAll(results);
+          _dataResults = results;
         });
       } else {
         print('Request failed with status: ${response.statusCode}');
@@ -53,10 +42,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
+    print(_dataResults.length);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -71,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             const Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -111,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Flexible(
               fit: FlexFit.tight,
               child: Container(
@@ -128,21 +117,28 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 16),
-                      // PlantDiseaseItem(
-                      //   title: 'Cashew Bacterial blight',
-                      //   date: 'Mar 1 2024',
-                      //   imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
-                      // ),
-                      ListView(
+                      const SizedBox(height: 16),
+                      ListView.builder(
                         shrinkWrap: true,
-                        children: dataResults.map((dataResult) {
+                        itemCount:
+                            _dataResults.length > 3 ? 4 : _dataResults.length,
+                        itemBuilder: (context, index) {
+                          final dataResult = _dataResults[index];
+                          final plantName =
+                              dataResult.result?.diseaseId?.plant?.plantName ??
+                                  'Unknown';
+                          final diseaseName = dataResult
+                                  .result?.diseaseId?.disease?.diseaseName ??
+                              'Unknown';
+                          final date = dataResult.result?.createdAt;
                           return PlantDiseaseItem(
-                            title: "dasdasdasd",
-                            date: DateFormat('MMM d yyyy').format(dataResult.createdAt),
-                            imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
+                            date: date != null
+                                ? DateFormat('dd/MM/yyyy').format(date)
+                                : 'Unknown',
+                            title: "${plantName} ${diseaseName}",
+                            imageUrl: dataResult?.images?.first?.imageUrl ?? '',
                           );
-                        }).take(3).toList(),
+                        },
                       ),
                       const SizedBox(height: 20),
                       Center(
@@ -154,7 +150,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/myplants');
+                              if (_dataResults.length != 0) {
+                                Navigator.pushNamed(context, '/myplants');
+                              }
                             },
                             child: const Text(
                               'See more',
@@ -177,4 +175,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final dataResults = dataResultsFromJson(jsonString);
+//     final dataResultsByResultId = dataResultsByResultIdFromJson(jsonString);
 
 import 'dart:convert';
 
-List<DataResults> dataResultsFromJson(String str) => List<DataResults>.from(json.decode(str).map((x) => DataResults.fromJson(x)));
+DataResultsByResultId dataResultsByResultIdFromJson(String str) => DataResultsByResultId.fromJson(json.decode(str));
 
-String dataResultsToJson(List<DataResults> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String dataResultsByResultIdToJson(DataResultsByResultId data) => json.encode(data.toJson());
 
-class DataResults {
+class DataResultsByResultId {
   Result? result;
   List<Image>? images;
 
-  DataResults({
+  DataResultsByResultId({
     this.result,
     this.images,
   });
 
-  factory DataResults.fromJson(Map<String, dynamic> json) => DataResults(
+  factory DataResultsByResultId.fromJson(Map<String, dynamic> json) => DataResultsByResultId(
     result: json["result"] == null ? null : Result.fromJson(json["result"]),
     images: json["images"] == null ? [] : List<Image>.from(json["images"]!.map((x) => Image.fromJson(x))),
   );

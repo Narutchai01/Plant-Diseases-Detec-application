@@ -18,7 +18,7 @@ class PlantDiseaseItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            // Add your navigation logic here
+            Navigator.pushNamed(context, "/profile");
           },
           child: Container(
             padding: const EdgeInsets.all(16),
