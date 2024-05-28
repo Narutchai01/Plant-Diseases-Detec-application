@@ -45,7 +45,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    print(_dataResults.length);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -130,13 +129,16 @@ class _HomePageState extends State<HomePage> {
                           final diseaseName = dataResult
                                   .result?.diseaseId?.disease?.diseaseName ??
                               'Unknown';
-                          final date = dataResult.result?.createdAt;
+                          final date = dataResult.result!.createdAt;
+                          final resultId = dataResult.result?.id ;
                           return PlantDiseaseItem(
                             date: date != null
                                 ? DateFormat('dd/MM/yyyy').format(date)
                                 : 'Unknown',
                             title: "${plantName} ${diseaseName}",
-                            imageUrl: dataResult?.images?.first?.imageUrl ?? '',
+                            imageUrl: dataResult?.imagesUrl!.first!.imageUrl ?? '',
+                            resultId: resultId!,
+
                           );
                         },
                       ),
@@ -151,7 +153,11 @@ class _HomePageState extends State<HomePage> {
                           child: TextButton(
                             onPressed: () {
                               if (_dataResults.length != 0) {
-                                Navigator.pushNamed(context, '/myplants');
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      Navbar(index: 3),
+                                ));
                               }
                             },
                             child: const Text(
@@ -171,7 +177,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: Navbar(),
+      // bottomNavigationBar: Navbar(),
     );
   }
 }

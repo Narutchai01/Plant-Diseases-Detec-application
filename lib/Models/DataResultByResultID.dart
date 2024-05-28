@@ -10,38 +10,38 @@ String dataResultsByResultIdToJson(DataResultsByResultId data) => json.encode(da
 
 class DataResultsByResultId {
   Result? result;
-  List<Image>? images;
+  List<ImagesUrl>? imagesUrl;
 
   DataResultsByResultId({
     this.result,
-    this.images,
+    this.imagesUrl,
   });
 
   factory DataResultsByResultId.fromJson(Map<String, dynamic> json) => DataResultsByResultId(
     result: json["result"] == null ? null : Result.fromJson(json["result"]),
-    images: json["images"] == null ? [] : List<Image>.from(json["images"]!.map((x) => Image.fromJson(x))),
+    imagesUrl: json["imagesURL"] == null ? [] : List<ImagesUrl>.from(json["imagesURL"]!.map((x) => ImagesUrl.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "result": result?.toJson(),
-    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x.toJson())),
+    "imagesURL": imagesUrl == null ? [] : List<dynamic>.from(imagesUrl!.map((x) => x.toJson())),
   };
 }
 
-class Image {
+class ImagesUrl {
   int? id;
   int? resultId;
   String? imageUrl;
   DateTime? createdAt;
 
-  Image({
+  ImagesUrl({
     this.id,
     this.resultId,
     this.imageUrl,
     this.createdAt,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory ImagesUrl.fromJson(Map<String, dynamic> json) => ImagesUrl(
     id: json["id"],
     resultId: json["result_id"],
     imageUrl: json["image_url"],

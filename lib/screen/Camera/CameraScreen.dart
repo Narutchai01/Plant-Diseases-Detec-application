@@ -28,7 +28,6 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> initializeCamera() async {
     // Request permissions for camera and storage
     await [Permission.camera, Permission.storage].request();
-
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {
       controller = CameraController(cameras[1], ResolutionPreset.high);
@@ -136,12 +135,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    home: CameraScreen(),
-  ));
-}
+
 
 
 

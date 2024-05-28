@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 void main() async {
   runApp(const MyApp());
-  // await dotenv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: Signup(),
-      home: Result(),
+      home: Signup(),
       routes: Routes.routes,
     );
   }

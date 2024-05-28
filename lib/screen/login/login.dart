@@ -1,3 +1,4 @@
+import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final id = res.data['id'];
       SharePreferrences().saveToken(token);
       SharePreferrences().saveId(id);
-      Navigator.pushNamed(context, '/home');
+      // Navigator.pushNamed(context, '/home');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) => Navbar(index: 0),
+      ));
     }).catchError((error) {
       print(error);
     });

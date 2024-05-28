@@ -54,7 +54,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: Navbar(), // Added Navbar()
+        // bottomNavigationBar: Navbar(), // Added Navbar()
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(

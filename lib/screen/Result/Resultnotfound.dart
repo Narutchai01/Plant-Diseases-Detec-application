@@ -86,7 +86,7 @@ class _ResultnotfoundState extends State<Resultnotfound> {
                     height: 200,
                   ),
                   SizedBox(height: 20),
-                  Text(
+                  const Text(
                     'Do not found any disease',
                     style: TextStyle(
                       fontSize: 24,
@@ -94,7 +94,7 @@ class _ResultnotfoundState extends State<Resultnotfound> {
                     ),
                   ),
                   SizedBox(height: 12),
-                  Text(
+                  const Text(
                     'Look like your plant is healthy.\nYou can try again by taking another photo.',
                     textAlign: TextAlign.center,
                     style: TextStyle(

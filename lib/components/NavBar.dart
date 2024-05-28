@@ -1,53 +1,66 @@
+import 'package:capstonec/screen/Camera/CameraScreen.dart';
+import 'package:capstonec/screen/myplants/myplants.dart';
 import 'package:flutter/material.dart';
+import 'package:capstonec/screen/HomePage.dart';
+import 'package:capstonec/screen/Profile/Profile.dart';
 
 class Navbar extends StatefulWidget {
+  final int index;
+
+  const Navbar({Key? key, required this.index}) : super(key: key);
+
   @override
   _NavbarState createState() => _NavbarState();
 }
 
 class _NavbarState extends State<Navbar> {
-  int _selectedIndex = 0;
+  int currentIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, '/home');
-        break;
-      case 1:
-        Navigator.pushReplacementNamed(context, '/camera');
-        break;
-      case 2:
-        Navigator.pushReplacementNamed(context, '/profile');
-        break;
-      default:
-        Navigator.pushReplacementNamed(context, '/home');
-    }
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.index;
   }
+
+  List<Widget> Menupage = [
+    HomePage(),
+    CameraScreen(),
+    Profile(),
+    MyPlants()
+  ];
+
+  List<BottomNavigationBarItem> IconMenu = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.camera_alt),
+      label: 'Camera',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Profile',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      backgroundColor: const Color.fromRGBO(182, 196, 182, 1),
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: Menupage[currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          items: IconMenu,
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.camera_alt),
-          label: 'Camera',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: 'Profile',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+      ),
     );
   }
 }

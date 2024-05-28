@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstonec/Models/DataResults.dart';
+import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/components/PlantDeseaseItem.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
@@ -26,7 +27,6 @@ class _MyPlantsState extends State<MyPlants> {
   String? _selectedPlantName;
   List<DataResults> _dataResults = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -51,8 +51,6 @@ class _MyPlantsState extends State<MyPlants> {
       print('Error: $e');
     }
   }
-
-
 
   String _sortOptionToString(SortOption option) {
     switch (option) {
@@ -94,7 +92,8 @@ class _MyPlantsState extends State<MyPlants> {
                     borderRadius: BorderRadius.circular(4.0),
                     color: selectedItemColor,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
                   child: Text(
                     _sortOptionToString(_sortOption),
                     style: TextStyle(
@@ -107,29 +106,31 @@ class _MyPlantsState extends State<MyPlants> {
             ),
           ),
           ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _dataResults.length > 3 ? 4 : _dataResults.length,
-                        itemBuilder: (context, index) {
-                          final dataResult = _dataResults[index];
-                          final plantName = dataResult.result?.diseaseId?.plant?.plantName ?? 'Unknown';
-                          final diseaseName = dataResult.result?.diseaseId?.disease?.diseaseName ?? 'Unknown';
-                          final date = dataResult.result?.createdAt;
-                          return PlantDiseaseItem(
-                            date: date != null ? DateFormat('dd/MM/yyyy').format(date) : 'Unknown',
-                            title: "${plantName} ${diseaseName}",
-                            imageUrl: dataResult?.images?.first?.imageUrl ?? '',
-                          );
-                        },
-                      ),
-          ],
+            shrinkWrap: true,
+            itemCount: _dataResults.length > 3 ? 4 : _dataResults.length,
+            itemBuilder: (context, index) {
+              final dataResult = _dataResults[index];
+              final plantName =
+                  dataResult.result?.diseaseId?.plant?.plantName ?? 'Unknown';
+              final diseaseName =
+                  dataResult.result?.diseaseId?.disease?.diseaseName ??
+                      'Unknown';
+              final date = dataResult.result?.createdAt;
+              final resultId = dataResult.result?.id ?? 0;
+              return PlantDiseaseItem(
+                date: date != null
+                    ? DateFormat('dd/MM/yyyy').format(date)
+                    : 'Unknown',
+                title: "${plantName} ${diseaseName}",
+                imageUrl: dataResult?.imagesUrl?.first.imageUrl ?? '', resultId: resultId,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
-
-
 }
-
-
 
 void main() {
   runApp(MaterialApp(

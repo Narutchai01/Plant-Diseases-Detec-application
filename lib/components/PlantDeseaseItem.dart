@@ -1,15 +1,17 @@
+import 'package:capstonec/screen/Result/Result.dart';
 import 'package:flutter/material.dart';
 
 class PlantDiseaseItem extends StatelessWidget {
   final String title;
   final String date;
   final String imageUrl;
+  final int resultId;
 
   const PlantDiseaseItem({
     Key? key,
     required this.title,
     required this.date,
-    required this.imageUrl,
+    required this.imageUrl, required this.resultId,
   }) : super(key: key);
 
   @override
@@ -18,7 +20,9 @@ class PlantDiseaseItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, "/profile");
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => Result( resultId: resultId,),
+            ));
           },
           child: Container(
             padding: const EdgeInsets.all(16),
