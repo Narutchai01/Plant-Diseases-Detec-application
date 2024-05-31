@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:capstonec/components/NavBar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
@@ -48,7 +49,10 @@ class _SignupState extends State<Signup> {
       SharePreferrences().saveToken(response.data["token"]);
       SharePreferrences().saveId(response.data["id"]);
       _showSuccessDialog();
-      Navigator.pushNamed(context, "/profile");
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) => Navbar(index: 0),
+      ));
+
     } else {
       _showErrorDialog('An error occurred. Please try again.');
     }
@@ -56,7 +60,6 @@ class _SignupState extends State<Signup> {
     _showErrorDialog('An error occurred. Please try again.');
   });
 }
-
   void _showErrorDialog(String message) {
     showDialog(
       context: context,

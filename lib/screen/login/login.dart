@@ -29,10 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final id = res.data['id'];
       SharePreferrences().saveToken(token);
       SharePreferrences().saveId(id);
-      // Navigator.pushNamed(context, '/home');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) => Navbar(index: 0),
-      ));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Navbar(index: 0), ), (route) => false,);
     }).catchError((error) {
       print(error);
     });

@@ -2,20 +2,21 @@ import 'dart:convert';
 
 import 'package:capstonec/Models/DataResultByResultID.dart';
 import 'package:capstonec/components/DropDownDetails.dart';
+import 'package:capstonec/components/NavBar.dart';
 import 'package:capstonec/utils/DioInstance.dart';
 import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class Result extends StatefulWidget {
+class PreviewResult extends StatefulWidget {
   final int resultId;
-  const Result({Key? key, required this.resultId}) : super(key: key);
+  const PreviewResult({Key? key, required this.resultId}) : super(key: key);
 
   @override
-  _ResultState createState() => _ResultState();
+  _PreviewResultState createState() => _PreviewResultState();
 }
 
-class _ResultState extends State<Result> {
+class _PreviewResultState extends State<PreviewResult> {
   final PageController _pageController = PageController();
   bool _isExpanded = false;
   DataResultsByResultId? dataResultsByResultId;
@@ -37,12 +38,29 @@ class _ResultState extends State<Result> {
       final response = await dioInstance.dio.get('/result/$id/${resultid}');
       if (response.statusCode == 200) {
         final results =
-            dataResultsByResultIdFromJson(jsonEncode(response.data));
+        dataResultsByResultIdFromJson(jsonEncode(response.data));
         setState(() {
           dataResultsByResultId = results;
         });
       } else {
         print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void handleBacked() async {
+    final token = await SharePreferrences().getToken() ?? '';
+    final id = await SharePreferrences().getId();
+    final dioInstance = DioInstance(token);
+    try {
+     final response = await dioInstance.dio.delete('/result/${id}/${resultid}');
+      if (response.statusCode == 200) {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Navbar(index: 0)), (route) => false,);
+      } else {
+        // print('Request failed with status: ${response.statusCode}');
+        print('dasdasdasd');
       }
     } catch (e) {
       print('Error: $e');
@@ -56,7 +74,7 @@ class _ResultState extends State<Result> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            handleBacked();
           },
         ),
         title: const Text(
@@ -80,11 +98,11 @@ class _ResultState extends State<Result> {
                   child: PageView(
                     controller: _pageController,
                     children: dataResultsByResultId?.imagesUrl?.map((url) {
-                          return Image.network(
-                            url.imageUrl ?? '',
-                            fit: BoxFit.cover,
-                          );
-                        }).toList() ??
+                      return Image.network(
+                        url.imageUrl ?? '',
+                        fit: BoxFit.cover,
+                      );
+                    }).toList() ??
                         [],
                   ),
                 ),
@@ -113,7 +131,7 @@ class _ResultState extends State<Result> {
                 children: [
                   Text(
                     dataResultsByResultId
-                            ?.result?.diseaseId?.plant?.plantName ??
+                        ?.result?.diseaseId?.plant?.plantName ??
                         'Unknown',
                     style: const TextStyle(
                       fontSize: 20,
@@ -123,7 +141,7 @@ class _ResultState extends State<Result> {
                   const SizedBox(height: 8),
                   Text(
                     dataResultsByResultId
-                            ?.result?.diseaseId?.disease?.diseaseName ??
+                        ?.result?.diseaseId?.disease?.diseaseName ??
                         'Unknown',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -148,37 +166,54 @@ class _ResultState extends State<Result> {
                 },
               )
             else
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: Image.asset("assets/images/grownplant.png"),
-                  ),
-                  const Text(
-                    'Do not found any disease',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Image.asset("assets/images/grownplant.png"),
                     ),
-                  ),
-                  SizedBox(height: 12),
-                  const Text(
-                    'Look like your plant is healthy.\nYou can try again by taking another photo.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
+                    const Text(
+                      'Do not found any disease',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                    SizedBox(height: 12),
+                    const Text(
+                      'Look like your plant is healthy.\nYou can try again by taking another photo.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              )
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'Back',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
+      )
     );
   }
 }

@@ -77,7 +77,6 @@ class _CameraScreenState extends State<CameraScreen> {
       body: isCameraInitialized
           ? Stack(
         children: [
-
           Container(
             height: double.infinity,
             child: CameraPreview(controller),
@@ -91,14 +90,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   final imagePicker = ImagePicker();
                   final List<XFile>? imageFiles = await imagePicker.pickMultiImage();
                   if (imageFiles != null && imageFiles.isNotEmpty) {
-                    // Navigate to ImagePickerConfirm and clear the navigation stack
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => (ImagePickerConfirm(
                           imageFiles
                         )
-
                         ),
                       ),
                           (route) => true,

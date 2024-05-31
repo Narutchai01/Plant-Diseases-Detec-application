@@ -70,7 +70,7 @@ class _MyPlantsState extends State<MyPlants> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, size: 24.0),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Navbar(index: 0)));
           },
         ),
         title: const Text('My Plants'),

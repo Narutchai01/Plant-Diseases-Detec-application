@@ -138,7 +138,6 @@ class _HomePageState extends State<HomePage> {
                             title: "${plantName} ${diseaseName}",
                             imageUrl: dataResult?.imagesUrl!.first!.imageUrl ?? '',
                             resultId: resultId!,
-
                           );
                         },
                       ),
@@ -152,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              if (_dataResults.length != 0) {
+                              if (_dataResults.isNotEmpty) {
                                 Navigator.of(context)
                                     .pushReplacement(MaterialPageRoute(
                                   builder: (BuildContext context) =>
