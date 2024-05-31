@@ -28,7 +28,6 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> initializeCamera() async {
     // Request permissions for camera and storage
     await [Permission.camera, Permission.storage].request();
-
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {
       controller = CameraController(cameras[1], ResolutionPreset.high);
@@ -78,7 +77,6 @@ class _CameraScreenState extends State<CameraScreen> {
       body: isCameraInitialized
           ? Stack(
         children: [
-
           Container(
             height: double.infinity,
             child: CameraPreview(controller),
@@ -92,14 +90,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   final imagePicker = ImagePicker();
                   final List<XFile>? imageFiles = await imagePicker.pickMultiImage();
                   if (imageFiles != null && imageFiles.isNotEmpty) {
-                    // Navigate to ImagePickerConfirm and clear the navigation stack
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => (ImagePickerConfirm(
                           imageFiles
                         )
-
                         ),
                       ),
                           (route) => true,
@@ -136,12 +132,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    home: CameraScreen(),
-  ));
-}
+
 
 
 

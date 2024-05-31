@@ -1,9 +1,14 @@
 import 'dart:io';
 
 
-
+import 'package:capstonec/screen/Camera/PreviewImage.dart';
+import 'package:capstonec/screen/Result/PreviewResult.dart';
+import 'package:capstonec/screen/Result/Result.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../utils/SharePreferrences.dart';
 
 
 class ImagePickerConfirm extends StatefulWidget {
@@ -16,7 +21,41 @@ class ImagePickerConfirm extends StatefulWidget {
 }
 
 class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
-  final TextEditingController descriptionController = TextEditingController();
+
+
+  void handleSubmitted() async{
+    FormData formData = FormData.fromMap({
+      'images': [],
+    });
+    for (var file in widget.selectedImages) {
+      formData.files.add(MapEntry(
+        'images',
+        await MultipartFile.fromFile(file.path),
+      ));
+    }
+    final token = await SharePreferrences().getToken() ?? '';
+    final id = await SharePreferrences().getId();
+     Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+    try {
+     final resonse = await dio.post(
+        'http://localhost:3000/result/$id',
+        data: formData,
+        options: Options(
+          headers: {
+            'x-jwt-token': token,
+          },
+        ),
+      );
+      if (resonse.statusCode == 200) {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PreviewResult(resultId: resonse.data['id']), ), (route) => false,);
+      } else {
+        print('Request failed with status:');
+      }
+    } catch (e) {
+      print('Error:');
+    }
+  }
 
 
   @override
@@ -57,7 +96,7 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  print('Confirmation Button Pressed!');
+                  handleSubmitted();
                 },
                 child: const Text(
                   'Confirm',
@@ -67,12 +106,10 @@ class _ImagePickerConfirmState extends State<ImagePickerConfirm> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color.fromRGBO(48, 77, 48, 1),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 60.0, vertical: 30.0), // Adjust size here
                 ),
               ),
             ),

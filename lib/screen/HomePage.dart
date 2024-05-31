@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'package:capstonec/Models/DataResults.dart';
 import 'package:capstonec/components/NavBar.dart';
+import 'package:capstonec/components/PlantDeseaseItem.dart';
+import 'package:capstonec/utils/DioInstance.dart';
+import 'package:capstonec/utils/SharePreferrences.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,13 +15,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<DataResults> _dataResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getResults();
+  }
+
+  Future<void> _getResults() async {
+    try {
+      final token = await SharePreferrences().getToken() ?? '';
+      final id = await SharePreferrences().getId() ?? 0;
+      final dioInstance = DioInstance(token);
+      final response = await dioInstance.dio.get('/result/$id');
+      if (response.statusCode == 200) {
+        final results = dataResultsFromJson(jsonEncode(response.data));
+        setState(() {
+          _dataResults = results;
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(
                 'https://i.pinimg.com/564x/6d/c8/49/6dc8498c0944216300538c726bef2dd6.jpg'),
@@ -27,11 +59,11 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
-            SizedBox(height: 8),
-            Align(
+            const SizedBox(height: 8),
+            const Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 12.0),
+                padding: EdgeInsets.only(right: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -67,12 +99,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Flexible(
               fit: FlexFit.tight,
               child: Container(
                 padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFF0F0E5),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(32),
@@ -84,23 +116,30 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 16),
-                      PlantDiseaseItem(
-                        title: 'Cashew Bacterial blight',
-                        date: 'Mar 1 2024',
-                        imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
-                      ),
-                      const SizedBox(height: 10),
-                      PlantDiseaseItem(
-                        title: 'Cashew Bacterial blight',
-                        date: 'Mar 1 2024',
-                        imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
-                      ),
-                      const SizedBox(height: 10),
-                      PlantDiseaseItem(
-                        title: 'Cashew Bacterial blight',
-                        date: 'Mar 1 2024',
-                        imageUrl: 'https://pagacas.com/tenants/pagacas/upload/banner/benh-hai-dieu-4.jpg',
+                      const SizedBox(height: 16),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            _dataResults.length > 3 ? 4 : _dataResults.length,
+                        itemBuilder: (context, index) {
+                          final dataResult = _dataResults[index];
+                          final plantName =
+                              dataResult.result?.diseaseId?.plant?.plantName ??
+                                  'Unknown';
+                          final diseaseName = dataResult
+                                  .result?.diseaseId?.disease?.diseaseName ??
+                              'Unknown';
+                          final date = dataResult.result!.createdAt;
+                          final resultId = dataResult.result?.id ;
+                          return PlantDiseaseItem(
+                            date: date != null
+                                ? DateFormat('dd/MM/yyyy').format(date)
+                                : 'Unknown',
+                            title: "${plantName} ${diseaseName}",
+                            imageUrl: dataResult?.imagesUrl!.first!.imageUrl ?? '',
+                            resultId: resultId!,
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       Center(
@@ -112,9 +151,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/myplants');
+                              if (_dataResults.isNotEmpty) {
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      Navbar(index: 3),
+                                ));
+                              }
                             },
-                            child: Text(
+                            child: const Text(
                               'See more',
                               style: TextStyle(
                                 color: Colors.black,
@@ -131,74 +176,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: Navbar(),
-    );
-  }
-}
-
-class PlantDiseaseItem extends StatelessWidget {
-  final String title;
-  final String date;
-  final String imageUrl;
-
-  const PlantDiseaseItem({
-    Key? key,
-    required this.title,
-    required this.date,
-    required this.imageUrl,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            // Add your navigation logic here
-          },
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Image.network(
-                  imageUrl,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        date,
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '>', // '>' symbol for navigation
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Divider(
-          color: Colors.black,
-        ),
-      ],
+      // bottomNavigationBar: Navbar(),
     );
   }
 }

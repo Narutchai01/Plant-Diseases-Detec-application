@@ -146,7 +146,7 @@ class _EditpasswordState extends State<Editpassword> {
           ),
         ),
       ),
-      bottomNavigationBar: Navbar(),
+      // bottomNavigationBar: Navbar(),
     );
   }
 }

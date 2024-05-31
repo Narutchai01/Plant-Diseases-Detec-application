@@ -135,7 +135,7 @@ class _EditscreenState extends State<Editscreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Navbar(),
+      // bottomNavigationBar: Navbar(),
     );
   }
 }

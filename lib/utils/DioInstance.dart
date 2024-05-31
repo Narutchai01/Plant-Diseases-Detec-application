@@ -11,6 +11,7 @@ class DioInstance {
   return _singleton..dio = Dio(BaseOptions(
    baseUrl: "http://localhost:3000",
    headers: headers,
+   sendTimeout: Duration(milliseconds: 300)
   ));
  }
 

@@ -8,6 +8,7 @@ import 'package:capstonec/screen/HomePage.dart';
 import "package:capstonec/screen/myplants/myplants.dart";
 import 'package:capstonec/screen/Editpage/edit.dart';
 import 'package:capstonec/screen/changePassword/editpassword.dart';
+import 'package:capstonec/screen/result/result.dart';
 
 class Routes {
   static const String profile = '/profile';
